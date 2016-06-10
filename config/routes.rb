@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   post '/survivors/create' => 'survivor#create'
   patch '/survivors/update/:id' => 'survivor#update'
   put '/survivors/update/:id' => 'survivor#update'
-  delete '/survivors/destroy' => 'survivor#destroy'
+  delete '/survivors/:id' => 'survivor#destroy'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

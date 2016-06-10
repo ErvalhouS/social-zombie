@@ -2,11 +2,11 @@ class ReportController < ApplicationController
 
   # GET /infected_survivors
   def infected_survivors
-      render json: Survivor.infected_percentage, status: :ok
+      render json: {infected:(Survivor.infected_percentage.to_s || '00') + '%'}, status: :ok
   end
   # GET /healthy_survivors
   def healthy_survivors
-    render json: Survivor.healthy_percentage, status: :ok
+    render json: {infected:(Survivor.healthy_percentage.to_s || '00') + '%'}, status: :ok
   end
   # GET /average_resource/1.json
   def average_resource

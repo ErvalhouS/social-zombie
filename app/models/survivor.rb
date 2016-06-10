@@ -23,13 +23,13 @@ class Survivor < ActiveRecord::Base
     if args.respond_to?(:each)
       args.each do |item_value|
         self.items.each do |item|
-          grabbed_items << item if item.item_value == item_value
+          grabbed_items << item.id if item.item_value == item_value
           break
         end
       end
     else
       self.items.each do |item|
-        grabbed_items << item if item.item_value == args
+        grabbed_items << item.id if item.item_value == args
         break
       end
     end
