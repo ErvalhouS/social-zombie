@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.5.1'
 
 gem 'pg', group: :production
-gem 'sqlite3'
+gem 'sqlite3', group: [:development, :test]
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
