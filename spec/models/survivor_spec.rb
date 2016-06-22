@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 require 'rails_helper'
 
 RSpec.describe Survivor, type: :model do
@@ -78,4 +79,9 @@ RSpec.describe Survivor, type: :model do
     }.to raise_error('Items can not be traded unevenly!')
   end
 
+=======
+require "spec_helper"
+
+RSpec.describe Survivor do
+>>>>>>> 0-0-1
 end

@@ -1,0 +1,17 @@
+env:
+- APP_NAME=social-zombie DEFAULT=1 DATABASE_URL=postgres:///travis_ci_test REDIS_URL=redis://localhost:6379 MEMCACHE_SERVERS=localhost DEPLOYMENT=test PLINY_ENV=test TZ=UTC RAISE_ERRORS=true FORCE_SSL=false
+language: ruby
+rvm:
+  - 2.3.1
+services:
+  - postgresql
+  - memcached
+  - redis-server
+addons:
+  postgresql: "9.3"
+sudo: true
+cache: bundler
+before_script:
+  - chmod 777 ./bin/setup && ./bin/setup
+
+

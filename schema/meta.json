@@ -1,0 +1,9 @@
+{
+ "description": "Social-zombie is a system to share resources between non-infected humans via API.",
+ "id": "social-zombie",
+ "links": [{
+   "href": "https://social-zombie.herokuapp.com",
+   "rel": "self"
+ }],
+ "title": "Social-Zombie"
+}

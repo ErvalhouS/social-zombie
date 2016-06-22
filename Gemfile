@@ -1,49 +1,41 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
+ruby "2.3.1"
 
-
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.5.1'
-
-gem 'pg', group: :production
-gem 'sqlite3', group: [:development, :test]
-
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
-
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
-# bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
-
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use Unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+gem "multi_json"
+gem "oj"
+gem "pg"
+gem "pliny", "~> 0.17"
+gem "pry"
+gem "puma", "~> 2.16"
+gem "rack-ssl"
+gem "rack-timeout", "~> 0.4"
+gem "rake"
+gem "redis"
+gem "rollbar", require: "rollbar/middleware/sinatra"
+gem "sequel", "~> 4.34"
+gem "sequel-paranoid"
+gem "sequel_pg", "~> 1.6", require: "sequel"
+gem "sinatra", "~> 1.4", require: "sinatra/base"
+gem "sinatra-contrib", require: ["sinatra/namespace", "sinatra/reloader"]
+gem "sinatra-router"
+gem "sinatra-rate-limiter"
+gem "sucker_punch"
+gem "geokit"
+gem "bcrypt"
+gem "will_paginate"
+gem "dalli"
+gem "rack-cache"
+gem "jwt"
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
-  gem 'rspec-rails'
-  gem 'shoulda-matchers'
-  gem 'rspec_api_documentation'
+  gem "pry-byebug"
 end
 
-group :development do
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
-
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+group :test do
+  gem "simplecov", require: false
+  gem "committee"
+  gem "database_cleaner"
+  gem "dotenv"
+  gem "rack-test"
+  gem "rspec"
 end
-
-# Humanized requisitions
-#gem 'friendly_id'
-# Thread efficient WEB server
-gem 'puma'
-# Heroku compatibility Gem
-gem 'rails_12factor'
-gem 'geocoder'

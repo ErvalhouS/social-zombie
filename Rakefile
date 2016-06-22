@@ -1,6 +1,6 @@
-# Add your own tasks in files placed in lib/tasks ending in .rake,
-# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+require "pliny/tasks"
 
-require File.expand_path('../config/application', __FILE__)
+# Add your rake tasks to lib/tasks!
+Dir["./lib/tasks/*.rake"].each { |task| load task }
 
-Rails.application.load_tasks
+task :default => :spec

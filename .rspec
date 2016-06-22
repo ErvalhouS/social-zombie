@@ -1,2 +1,6 @@
 --color
+<<<<<<< HEAD
 --require spec_helper
+=======
+--format progress
+>>>>>>> 0-0-1

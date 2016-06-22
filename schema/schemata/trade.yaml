@@ -1,0 +1,74 @@
+---
+"$schema": http://json-schema.org/draft-04/hyper-schema
+title: Trade
+description: Represents the transaction of items between survivors
+stability: prototype
+strictProperties: true
+type:
+- object
+definitions:
+  id:
+    description: unique identifier of trade
+    readOnly: true
+    format: uuid
+    type:
+    - string
+  identity:
+    anyOf:
+    - "$ref": "/schemata/trade#/definitions/id"
+  created_at:
+    description: when trade was created
+    format: date-time
+    type:
+    - string
+  updated_at:
+    description: when trade was updated
+    format: date-time
+    type:
+    - string
+links:
+- description: Create a new trade.
+  href: "/trades"
+  method: POST
+  rel: create
+  schema:
+    properties: {}
+    type:
+    - object
+    - nil
+  title: Create
+- description: Delete an existing trade.
+  href: "/trades/{(%2Fschemata%2Ftrade%23%2Fdefinitions%2Fidentity)}"
+  method: DELETE
+  rel: destroy
+  title: Delete
+- description: Info for existing trade.
+  href: "/trades/{(%2Fschemata%2Ftrade%23%2Fdefinitions%2Fidentity)}"
+  method: GET
+  rel: self
+  title: Info
+- description: List existing trades.
+  href: "/trades"
+  method: GET
+  rel: instances
+  title: List
+- description: Update an existing trade.
+  href: "/trades/{(%2Fschemata%2Ftrade%23%2Fdefinitions%2Fidentity)}"
+  method: PATCH
+  rel: update
+  schema:
+    properties: {}
+    type:
+    - object
+    - nil
+  title: Update
+properties:
+  created_at:
+    "$ref": "/schemata/trade#/definitions/created_at"
+  id:
+    "$ref": "/schemata/trade#/definitions/id"
+  name:
+    "$ref": "/schemata/trade#/definitions/name"
+  updated_at:
+    "$ref": "/schemata/trade#/definitions/updated_at"
+id: schemata/trade
