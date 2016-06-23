@@ -47,14 +47,12 @@
         },
         "created_at": {
           "description": "when item was created",
-          "format": "date-time",
           "type": [
             "string"
           ]
         },
         "updated_at": {
           "description": "when item was updated",
-          "format": "date-time",
           "type": [
             "string"
           ]
@@ -218,6 +216,22 @@
             "string"
           ]
         },
+        "infections": {
+          "description": "infections of survivor",
+          "readOnly": false,
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "items": {
+          "description": "items of survivor",
+          "readOnly": true,
+          "type": [
+            "array",
+            "null"
+          ]
+        },
         "lat": {
           "description": "latitude of survivor",
           "readOnly": false,
@@ -340,6 +354,12 @@
         "gender": {
           "$ref": "#/definitions/survivor/definitions/gender"
         },
+        "infections": {
+          "$ref": "#/definitions/survivor/definitions/infections"
+        },
+        "items": {
+          "$ref": "#/definitions/survivor/definitions/items"
+        },
         "lat": {
           "$ref": "#/definitions/survivor/definitions/lat"
         },
@@ -398,7 +418,7 @@
           "readOnly": true,
           "format": "uuid",
           "type": [
-            "string",
+            "boolean",
             "null"
           ]
         },
@@ -407,7 +427,7 @@
           "readOnly": true,
           "format": "uuid",
           "type": [
-            "string",
+            "boolean",
             "null"
           ]
         },
@@ -420,14 +440,12 @@
         },
         "created_at": {
           "description": "when trade was created",
-          "format": "date-time",
           "type": [
             "string"
           ]
         },
         "updated_at": {
           "description": "when trade was updated",
-          "format": "date-time",
           "type": [
             "string"
           ]

@@ -30,12 +30,10 @@ definitions:
     - $ref: /schemata/infection#/definitions/id
   created_at:
     description: when item was created
-    format: date-time
     type:
     - string
   updated_at:
     description: when item was updated
-    format: date-time
     type:
     - string
 links:

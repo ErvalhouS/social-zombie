@@ -113,6 +113,10 @@ properties:
     $ref: /schemata/survivor#/definitions/gender
   items:
     $ref: /schemata/survivor#/definitions/items
+  infections:
+    $ref: /schemata/survivor#/definitions/infections
+  items:
+    $ref: /schemata/survivor#/definitions/items
   lat:
     $ref: /schemata/survivor#/definitions/lat
   lng:

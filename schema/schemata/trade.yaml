@@ -36,14 +36,14 @@ definitions:
     readOnly: true
     format: uuid
     type:
-    - string
+    - boolean
     - null
   reviewed:
     description: boolean to indicate review of trade by 'from' recipient and, after value is set to true it's items are exchanged
     readOnly: true
     format: uuid
     type:
-    - string
+    - boolean
     - null
   identity:
     anyOf:
