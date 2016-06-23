@@ -8,7 +8,7 @@ type:
 - object
 definitions:
   id:
-    description: unique identifier of item
+    description: unique identifier of infection
     readOnly: true
     format: uuid
     type:

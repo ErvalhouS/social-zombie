@@ -46,6 +46,7 @@ Refer to file [setup_ubuntu.sh](https://github.com/ErvalhouS/social-zombie/blob/
 ```
 $ git clone --branch=master https://github.com/ErvalhouS/social-zombie.git social-zombie
 $ cd social-zombie
+$ chmod +x bin/setup
 $ bin/setup
 ```
 * You can confirm your environment is setup by running tests:

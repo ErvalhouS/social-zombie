@@ -1,7 +1,7 @@
 ---
 $schema: http://json-schema.org/draft-04/hyper-schema
 title: Item
-description: Items: Water, food, medicataion or ammunition of a survivor
+description: Items - Water, food, medicataion or ammunition of a survivor
 stability: prototype
 strictProperties: true
 type:
@@ -18,7 +18,6 @@ definitions:
     readOnly: true
     type:
     - string
-    - null
   item_value:
     description: value of item
     readOnly: true

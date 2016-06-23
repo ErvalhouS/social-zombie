@@ -88,7 +88,7 @@ links:
   method: DELETE
   rel: destroy
   title: Delete
-- description: Update an existing trade, at this point there are 2 options for trade update: 1 - The :to survivor is replying with :accepted and :to_items 2 - The survivor that owns :from_survivor is replying with :reviewed, so that the trade can be completed
+- description: Update an existing trade, at this point there are 2 options for trade update 1 - The :to survivor is replying with :accepted and :to_items 2 - The survivor that owns :from_survivor is replying with :reviewed, so that the trade can be completed
   href: "/trades/{(%2Fschemata%2Ftrade%23%2Fdefinitions%2Fidentity)}"
   method: PATCH
   rel: update

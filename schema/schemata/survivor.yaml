@@ -1,7 +1,7 @@
 ---
 $schema: http://json-schema.org/draft-04/hyper-schema
 title: Survivor
-description: User of the system, surviving on the zombie-crawled wasteland. When with pending trades to accept or review a 'pending_trade' HTTP header will be attached to all requests
+description: User of the system, surviving on the zombie-crawled wasteland. When with pending trades to accept or review a pending_trade HTTP header will be attached to all requests
 stability: prototype
 strictProperties: true
 type:
@@ -32,18 +32,6 @@ definitions:
     readOnly: false
     type: 
     - string
-  infections:
-    description: reports of infection of survivor
-    readOnly: false
-    type:
-    - object
-    - null
-  items:
-    description: items of survivor
-    readOnly: false
-    type:
-    - object
-    - null
   lat:
     description: latitude of survivor
     readOnly: false
@@ -92,13 +80,13 @@ links:
   method: GET
   rel: instances
   title: List
-- description: Receives reports of population status, including: healthy percentage, infected percentage, and totals
-  href: /survivors/status
+- description: Receives reports of population status, including - healthy percentage, infected percentage, and totals
+  href: /reports/status
   method: GET
   rel: reports
   title: Survivors status
-- description": "Receives reports of items status, including: Average amount of each kind of resource by survivor (e.g. 5 waters per user) and Points lost because of infected survivor. et. al.",
-  href: /survivors/items/status
+- description: Receives reports of items status, including - Average amount of each kind of resource by survivor (e.g. 5 waters per user) and Points lost because of infected survivor. et. al.",
+  href: /reports/items
   method: GET
   rel: items report
   title: Items status
@@ -123,10 +111,6 @@ properties:
     $ref: /schemata/survivor#/definitions/age
   gender:
     $ref: /schemata/survivor#/definitions/gender
-  items:
-    $ref: /schemata/survivor#/definitions/items
-  infections:
-    $ref: /schemata/survivor#/definitions/infections
   items:
     $ref: /schemata/survivor#/definitions/items
   lat:
