@@ -67,7 +67,13 @@
         }
       },
       "links": [
-
+        {
+          "description": "Info for existing item.",
+          "href": "/items/{(%2Fschemata%2Fitem%23%2Fdefinitions%2Fidentity)}",
+          "method": "GET",
+          "rel": "self",
+          "title": "Info"
+        }
       ],
       "properties": {
         "created_at": {
@@ -78,6 +84,9 @@
         },
         "name": {
           "$ref": "#/definitions/item/definitions/name"
+        },
+        "survivor_id": {
+          "$ref": "#/definitions/item/definitions/survivor_id"
         },
         "updated_at": {
           "$ref": "#/definitions/item/definitions/updated_at"
@@ -124,7 +133,7 @@
           ]
         },
         "infections": {
-          "description": "reports of infection of survivor",
+          "description": "reports of infection of survivor, when is reaches 3 the survivor is considered a zombie and cannot trade with others, can't access/manipulate their inventory, nor be listed in the reports",
           "readOnly": false,
           "type": [
             "object", "array", "null"
@@ -138,14 +147,14 @@
           ]
         },
         "lat": {
-          "description": "latitude of survivor",
+          "description": "latitude of survivor, when logged is updated automatically at each requisition",
           "readOnly": false,
           "type": [
             "number", "null"
           ]
         },
         "lng": {
-          "description": "longitude of survivor",
+          "description": "longitude of survivor, when logged is updated automatically at each requisition",
           "readOnly": false,
           "type": [
             "number", "null"
@@ -261,14 +270,14 @@
             ]
           },
           "title": "Create"
-        },
-        {
-          "description": "Delete an existing survivor.",
-          "href": "/survivors/{(%23%2Fdefinitions%2Fsurvivor%2Fdefinitions%2Fidentity)}",
-          "method": "DELETE",
-          "rel": "destroy",
-          "title": "Delete"
-        },
+          },
+          {
+            "description": "Delete an existing survivor.",
+            "href": "/survivors/{(%23%2Fdefinitions%2Fsurvivor%2Fdefinitions%2Fidentity)}",
+            "method": "DELETE",
+            "rel": "destroy",
+            "title": "Delete"
+          },
         {
           "description": "Info for existing survivor.",
           "href": "/survivors/{(%23%2Fdefinitions%2Fsurvivor%2Fdefinitions%2Fidentity)}",
@@ -285,15 +294,15 @@
         },
         {
           "description": "Receives reports of population status, including: healthy percentage, infected percentage, and totals",
-          "href": "/survivors/status",
-          "method": "get",
+          "href": "/reports/survivors",
+          "method": "GET",
           "rel": "report",
           "title": "Surivors status"
         },
         {
           "description": "Receives reports of items status, including: Average amount of each kind of resource by survivor (e.g. 5 waters per user) and Points lost because of infected survivor. et. al.",
-          "href": "/survivors/items/status",
-          "method": "DELETE",
+          "href": "/reports/items",
+          "method": "GET",
           "rel": "items report",
           "title": "Items status"
         },
@@ -412,7 +421,7 @@
     "trade": {
       "$schema": "http://json-schema.org/draft-04/hyper-schema",
       "title": "Trade",
-      "description": "Represents the transaction of items between survivors",
+      "description": "Represents the transaction of items between survivors, which will be warned of pending trade through pending_trade HTTP header on every logged request, until it is marked as :accepted and :reviewed",
       "stability": "prototype",
       "strictProperties": true,
       "type": [
@@ -431,25 +440,32 @@
           "description": "items from the origin of transaction, represented by 'items' array of JSON Item objects",
           "readOnly": true,
           "type": [
-            "string", "null"
+            "string"
+          ]
+        },
+        "to": {
+          "description": "survivor recipient of the trade, will be warned of pending trade through pending_trade HTTP header on every logged request, until it is marked as :accepted and :reviewed",
+          "readOnly": true,
+          "type": [
+            "string"
           ]
         },
         "to_items": {
-          "description": "items added to trade with origin, represented by 'items' array of JSON Item objects",
+          "description": "items added to trade with origin, represented by 'items' array of JSON Item objects. It's owner will be warned of pending trade through pending_trade HTTP header on every logged request, until it is marked as :accepted and :reviewed",
           "readOnly": true,
           "type": [
             "string", "null"
           ]
         },
         "accepted": {
-          "description": "boolean to indicate acceptance of trade by 'to' recipient",
+          "description": "boolean to indicate acceptance of trade by :to recipient",
           "readOnly": true,
           "type": [
             "boolean", "null"
           ]
         },
         "reviewed": {
-          "description": "boolean to indicate review of trade by 'from' recipient",
+          "description": "boolean to indicate review of trade by 'from' recipient and, after value is set to true it's items are exchanged",
           "readOnly": true,
           "type": [
             "boolean", "null"
@@ -479,25 +495,24 @@
       },
       "links": [
         {
-          "description": "Create a new trade.",
+          "description": "Create a new trade, at this point, only the attributes :to and :from_items must to be passed. After it's creation both users will receive all responses marked with pending_trade HHTP header, containing the data for this trade, until marked as :accepted and :reviewed",
           "href": "/trades",
           "method": "POST",
           "rel": "create",
           "schema": {
             "properties": {
+              "to": {
+                "$ref": "#/definitions/trade/definitions/to"
+              },
+              "from_items": {
+                "$ref": "#/definitions/trade/definitions/from_items"
+              }
             },
             "type": [
               "object", "null"
             ]
           },
           "title": "Create"
-        },
-        {
-          "description": "Delete an existing trade.",
-          "href": "/trades/{(%23%2Fdefinitions%2Ftrade%2Fdefinitions%2Fidentity)}",
-          "method": "DELETE",
-          "rel": "destroy",
-          "title": "Delete"
         },
         {
           "description": "Info for existing trade.",
@@ -514,12 +529,29 @@
           "title": "List"
         },
         {
-          "description": "Update an existing trade.",
+          "description": "Delete an existing trade, only possible if logged survivor is one the :to or :from_items survivors and if trade isn't accepted and reviewed.",
+          "href": "/trades/{(%23%2Fdefinitions%2Ftrade%2Fdefinitions%2Fidentity)}",
+          "method": "DELETE",
+          "rel": "destroy",
+          "title": "Delete"
+        },
+        {
+          "description": "Update an existing trade, at this point there are 2 options for trade update: 1 - The :to survivor is replying with :accepted and :to_items 2 - The survivor that owns :from_survivor is replying with :reviewed, so that the trade can be completed",
+
           "href": "/trades/{(%23%2Fdefinitions%2Ftrade%2Fdefinitions%2Fidentity)}",
           "method": "PATCH",
           "rel": "update",
           "schema": {
             "properties": {
+              "to_items": {
+                "$ref": "#/definitions/trade/definitions/to_items"
+              },
+              "accepted": {
+                "$ref": "#/definitions/trade/definitions/accepted"
+              },
+              "reviewed": {
+                "$ref": "#/definitions/trade/definitions/reviewed"
+              }
             },
             "type": [
               "object", "null"
@@ -538,6 +570,9 @@
         "to_items": {
           "$ref": "#/definitions/trade/definitions/to_items"
         },
+        "to": {
+          "$ref": "#/definitions/trade/definitions/to"
+        },
         "from_items": {
           "$ref": "#/definitions/trade/definitions/from_items"
         },
@@ -551,6 +586,96 @@
           "$ref": "#/definitions/trade/definitions/updated_at"
         }
       }
+    },
+    "infection": {
+      "$schema": "http://json-schema.org/draft-04/hyper-schema",
+      "title": "Infection",
+      "description": "Infection reports of survivors, when a survivor is reported as infected 3 times, he/she is considered a zombie and therefore cannot trade or interact anymore.",
+      "stability": "prototype",
+      "strictProperties": true,
+      "type": [
+        "object"
+      ],
+      "definitions": {
+        "id": {
+          "description": "unique identifier of infection report",
+          "readOnly": true,
+          "format": "uuid",
+          "type": [
+            "string"
+          ]
+        },
+        "survivor_id": {
+          "description": "unique identifier of reported",
+          "readOnly": true,
+          "format": "uuid",
+          "type": [
+            "string"
+          ]
+        },
+        "reporter_id": {
+          "description": "unique identifier of reporter",
+          "readOnly": true,
+          "format": "uuid",
+          "type": [
+            "string"
+          ]
+        },
+        "identity": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/infection/definitions/id"
+            }
+          ]
+        },
+        "created_at": {
+          "description": "when survivor was created",
+          "type": [
+            "string"
+          ]
+        },
+        "updated_at": {
+          "description": "when survivor was updated",
+          "type": [
+            "string"
+          ]
+        }
+      },
+      "links": [
+        {
+          "description": "Report another survivor as infected, only works when logged.",
+          "href": "/infections/{(%2Fschemata%2Finfection%23%2Fdefinitions%2Fidentity)}",
+          "method": "POST",
+          "rel": "create",
+          "schema": {
+            "properties": {
+              "survivor_id": {
+                "$ref": "#/definitions/infection/definitions/survivor_id"
+              },
+              "reporter_id": {
+                "$ref": "#/definitions/infection/definitions/reporter_id"
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "created_at": {
+          "$ref": "#/definitions/infection/definitions/created_at"
+        },
+        "id": {
+          "$ref": "#/definitions/infection/definitions/id"
+        },
+        "survivor_id": {
+          "$ref": "#/definitions/infection/definitions/survivor_id"
+        },
+        "reporter_id": {
+          "$ref": "#/definitions/infection/definitions/reporter_id"
+        },
+        "updated_at": {
+          "$ref": "#/definitions/infection/definitions/updated_at"
+        }
+      }
     }
   },
   "properties": {
@@ -562,6 +687,9 @@
     },
     "trade": {
       "$ref": "#/definitions/trade"
+    },
+    "infection": {
+      "$ref": "#/definitions/infection"
     }
   },
   "description": "Social-zombie is a system to share resources between non-infected humans via API.",

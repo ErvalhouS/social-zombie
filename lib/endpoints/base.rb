@@ -73,21 +73,19 @@ module Endpoints
 
     before do
       rate_limit
-      # call for setting @user_id if logged
-      authorized?
-      if @user_id
-        pending_trade = Survivor.find(token: @user_id).try(:pending_trade)
+      if authorized?
+        pending_trade = current_user.try(:pending_trade)
         if pending_trade
-          headers 'pending_trade' => serialize(pending_trade)
+          headers 'pending_trade' => pending_trade
         end
-      end
-      # geocoded position recorded if logged
-      unless Geokit::Geocoders::IpGeocoder.private_ip_address?(request.ip) || @user_id.nil?
-        res=Geokit::Geocoders::MultiGeocoder.geocode(Geokit::Geocoders::IpGeocoder.do_geocode(request.ip).to_geocodeable_s)
-        survivor = Survivor.find(token: @user_id)
-        survivor.lat= res.lat
-        survivor.lng= res.lng
-        survivor.save
+
+        # geocoded position recorded if logged
+        unless Geokit::Geocoders::IpGeocoder.private_ip_address?(request.ip)
+          res = Geokit::Geocoders::GoogleGeocoder.geocode(request.ip)
+          current_user.lat = res.lat
+          current_user.lng = res.lng
+          current_user.save
+        end
       end
     end
 

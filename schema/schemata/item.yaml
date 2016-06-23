@@ -24,7 +24,6 @@ definitions:
     readOnly: true
     type:
     - number
-
   survivor_id:
     description: unique identifier of item owner
     readOnly: true
@@ -45,41 +44,11 @@ definitions:
     type:
     - string
 links:
-- description: Create a new item.
-  href: /items
-  method: POST
-  rel: create
-  schema:
-    properties: {}
-    type:
-    - object
-    - nil
-  title: Create
-- description: Delete an existing item.
-  href: /items/{(%2Fschemata%2Fitem%23%2Fdefinitions%2Fidentity)}
-  method: DELETE
-  rel: destroy
-  title: Delete
 - description: Info for existing item.
   href: /items/{(%2Fschemata%2Fitem%23%2Fdefinitions%2Fidentity)}
   method: GET
   rel: self
   title: Info
-- description: List existing items.
-  href: /items
-  method: GET
-  rel: instances
-  title: List
-- description: Update an existing item.
-  href: /items/{(%2Fschemata%2Fitem%23%2Fdefinitions%2Fidentity)}
-  method: PATCH
-  rel: update
-  schema:
-    properties: {}
-    type:
-    - object
-    - nil
-  title: Update
 properties:
   created_at:
     $ref: /schemata/item#/definitions/created_at

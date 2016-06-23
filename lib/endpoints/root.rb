@@ -1,17 +1,12 @@
 module Endpoints
   class Root < Base
     get "/" do
-      "Hello. Get information on how to user and install this platform at: https://github.com/ErvalhouS/social-zombie/"
-      "Get schema information and use cases at: https://github.com/ErvalhouS/social-zombie/blob/master/schema.md"
+      "Hello. Get information on how to use and install this platform at: https://github.com/ErvalhouS/social-zombie/"
       end
-
-    get '/login' do
-      erb :login
-    end
 
     get '/logout' do
       session["access_token"] = nil
-      redirect to("/")
+      status 200
     end
 
     post '/login' do
@@ -21,11 +16,11 @@ module Endpoints
         headers = {
             exp: Time.now.to_i + 86400 #expire in 1 day
         }
-
-        @token = JWT.encode({token: @current_user.generate_token!}, settings.signing_key, "RS256", headers)
+        @current_user.generate_token!
+        @token = JWT.encode([@current_user.token], settings.signing_key, "RS256", headers)
 
         session["access_token"] = @token
-        redirect to("/")
+        status 200
       else
         @current_user.errors if @current_user
         halt 401

@@ -31,11 +31,12 @@ module Pliny
           return token
         end
 
-        return nil
+        nil
       end
 
       # check the token to make sure it is valid with our public key
       def authorized?
+        @user_id = nil
         @token = extract_token
         begin
           payload, header = JWT.decode(@token, settings.verify_key, true)
@@ -56,11 +57,15 @@ module Pliny
             return false
           end
 
-          @user_id = payload["token"]
+          @user_id = payload[0]
 
         rescue JWT::DecodeError => e
           return false
         end
+        true
+      end
+      def current_user
+        Survivor.find(token: @user_id)
       end
     end
   end

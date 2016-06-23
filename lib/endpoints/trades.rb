@@ -19,7 +19,7 @@ module Endpoints
       post do
         protected!
         trade = Trade.new(body_params)
-        if trade.save
+        if !current_user.zombie? && trade.save
           status 201
           encode serialize(trade)
         else
@@ -39,7 +39,7 @@ module Endpoints
       patch "/:id" do |id|
         protected!
         trade = Trade.first(id: id) || halt(404)
-        if trade.update(body_params)
+        if !current_user.zombie? && trade.update(body_params)
           status 202
           encode serialize(trade)
         else
@@ -54,6 +54,7 @@ module Endpoints
         trade.destroy
         encode serialize(trade)
       end
+
     end
   end
 end

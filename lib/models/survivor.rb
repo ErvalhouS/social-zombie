@@ -5,6 +5,8 @@ class Survivor < Sequel::Model
   unrestrict_primary_key
   include BCrypt
 
+  attr_accessor :trade
+
   plugin :timestamps, update_on_create: true
 
   subset :infected, ->       { includes(:infections).where("infections.count >= 3") }
@@ -22,15 +24,20 @@ class Survivor < Sequel::Model
   end
 
   def pending_trade
-    self.trades.first.where(accepted!=true || (accepted==true && reviewed!=true))
+    if self.trades
+      self.trades.each {|o|o.accepted!=true || (o.accepted==true && o.reviewed!=true)}
+    end
+  end
+
+  def trades
+    @trades = Array.new
+    Trade.all.each do |trade|
+      @trades << trade if (trade.from.id == self.id ||  trade.to == self.id)
+    end
   end
 
   def zombie?
     self.infections.count >= 3
-  end
-
-  def report(infected)
-    infected.infections.create(reported_by: self.id)
   end
 
   def password
@@ -47,12 +54,13 @@ class Survivor < Sequel::Model
   end
 
   def items=(items)
-      @items = items unless new? || @trade
+      @items = items unless new? || self.trade
   end
 
 
   def self.status
-    Survivor.all.select_map(:infections).each { |survivor|
+    @survivors = {healthy: 0, infected: 0, total: 0}
+    Survivor.all.each { |survivor|
       if survivor.zombie?
         @survivors[:infected] =+ 1
       else
@@ -60,8 +68,8 @@ class Survivor < Sequel::Model
       end
       @survivors[:total] =+ 1
     }
-    @survivors[:infected_percentage] = (@survivors[:infected] / @survivors[:total])*100
-    @survivors[:healthy_percentage] = (@survivors[:healthy] / @survivors[:total])*100
+    @survivors[:infected_percentage] = @survivors[:total] == 0 ? 0 : (@survivors[:infected] / @survivors[:total])*100
+    @survivors[:healthy_percentage] = @survivors[:total] == 0 ? 0 : (@survivors[:healthy] / @survivors[:total])*100
     @survivors
   end
 end

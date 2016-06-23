@@ -35,7 +35,6 @@ module Endpoints
 
       patch "/:id" do |id|
         protected!
-
         survivor = Survivor.first(id: id) || halt(404)
         if survivor.update(body_params)
           status 202
@@ -53,12 +52,6 @@ module Endpoints
         encode serialize(survivor)
       end
 
-      get "/status" do
-        encode serialize(Survivor.status)
-      end
-      get "/items/status" do
-        encode serialize(Item.status)
-      end
     end
 
   end

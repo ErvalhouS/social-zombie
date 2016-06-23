@@ -6,6 +6,7 @@ Sequel.migration do
       timestamptz  :updated_at, default: Sequel.function(:now), null: false
       column       :from_items, :json,                 default: []
       column       :to_items, :json,                   default: []
+      uuid         :to
       Boolean      :accepted, read_only: true
       Boolean      :reviewed, read_only: true
     end

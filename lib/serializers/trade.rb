@@ -6,6 +6,7 @@ class Serializers::Trade < Serializers::Base
       updated_at: arg.updated_at.try(:iso8601),
       from_items: arg.from_items,
       to_items: arg.to_items,
+      to: arg.to,
       accepted: arg.accepted,
       reviewed: arg.reviewed,
     }

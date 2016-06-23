@@ -15,25 +15,26 @@ RSpec.describe Endpoints::Trades do
   before do
     @negan = Survivor.create(name:'Negan',age:50,gender:'male',password:'password')
     @wilson = Survivor.create(name:'Wilson',age:40,gender:'male',password:'password')
-    @negans_water = Item.new(name:'Water',item_value:4,survivor_id:@negan.id)
-    @wilsons_water = Item.new(name:'Water',item_value:4,survivor_id:@wilson.id)
 
-    @trade= Trade.create
-    @trade.from_items = MultiJson.encode(items: [@negans_water.to_hash])
-    @trade.to_items = MultiJson.encode(items: [@wilsons_water.to_hash])
-    # temporarily touch #updated_at until we can fix prmd
-    @negan.updated_at
-    @wilson.updated_at
+    @negans_water = Item.create(name:'Water',item_value:4,survivor_id:@negan.id)
+    @wilsons_water = Item.create(name:'Water',item_value:4,survivor_id:@wilson.id)
+
+    #Negan is trying to trade his water with Wilson
+    @trade = Trade.create( to: @wilson.id, from_items: MultiJson.encode([@negans_water.to_hash]) )
+
+    @trade.save
+
+    @trade.updated_at
     @negans_water.updated_at
     @wilsons_water.updated_at
-    @trade.updated_at
-
+    @negan.updated_at
+    @wilson.updated_at
     @negan.save
     @wilson.save
     @negans_water.save
     @wilsons_water.save
-
-    @trade.save
+    #Wilson has accepted the trade, and has sent his water as
+    @trade.accept(@wilsons_water)
   end
 
   describe 'GET /trades' do
@@ -46,19 +47,19 @@ RSpec.describe Endpoints::Trades do
 
   describe 'POST /trades' do
     before do
-      @example= Trade.new
-      @example.from_items = MultiJson.encode(items: [@negans_water.to_hash])
-      @example.to_items = MultiJson.encode(items: [@wilsons_water.to_hash])
+      @example = Trade.new( to: @wilson.id, from_items: MultiJson.encode([@negans_water.to_hash]) )
     end
     context 'With logged user' do
       before do
         post '/login', {name: 'Negan', password: 'password'}
       end
-      it 'returns created status code and conforms to schema' do
+      it 'returns created status code, conforms to schema and with `pending_trade` HTTP header on any request' do
         header "Content-Type", "application/json"
         post '/trades', MultiJson.encode(@example)
         assert_equal 201, last_response.status
         assert_schema_conform
+        get '/trades'
+        refute last_response.headers["pending_trade"].nil?
       end
     end
     context 'With non-logged user' do
@@ -72,7 +73,6 @@ RSpec.describe Endpoints::Trades do
         assert_schema_conform
       end
     end
-
   end
 
   describe 'GET /trades/:id' do
@@ -103,12 +103,14 @@ RSpec.describe Endpoints::Trades do
     context 'With logged user' do
       before do
         post '/login', {name: 'Negan', password: 'password'}
-        @trade.accepted = true
+        @example = Trade.new( to: @wilson.id, from_items: MultiJson.encode([@negans_water.to_hash]) )
+        @example.save
+        @example.to_items = @wilsons_water
       end
 
       it 'returns accepted status code and conforms to schema' do
         header "Content-Type", "application/json"
-        patch "/trades/#{@trade.id}", MultiJson.encode(@trade)
+        patch "/trades/#{@trade.id}", MultiJson.encode(@example)
         assert_equal 202, last_response.status
         assert_schema_conform
       end

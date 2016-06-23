@@ -51,7 +51,6 @@ RSpec.describe Endpoints::Survivors do
         post '/login', {name: 'Negan', password: 'password'}
         @negan.gender = 'alpha'
       end
-
       it 'returns accepted status code and conforms to schema' do
         header "Content-Type", "application/json"
         patch "/survivors/#{@negan.id}", MultiJson.encode(@negan)
@@ -75,7 +74,6 @@ RSpec.describe Endpoints::Survivors do
       before do
         post '/login', {name: 'Negan', password: 'password'}
       end
-
       it 'returns ok status code and conforms to schema' do
         delete "/survivors/#{@negan.id}"
         assert_equal 200, last_response.status

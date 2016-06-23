@@ -38,18 +38,26 @@ Beside those, there are some more practical features, e.g.:
 
 # Installation
 
-Fork app then run the bin/setup script to install dependencies, create databases, etc:
+* Install dependencies
+
+Refer to file [setup_ubuntu.sh](https://github.com/ErvalhouS/social-zombie/blob/master/setup_ubuntu.sh) for commands needed to install core dependencies on an Ubuntu 12.04+ Linux machine.
+
+* If you already have all dependencies in place, just clone app then run the bin/setup script to install gem dependencies, create databases, etc:
 ```
+$ git clone --branch=master https://github.com/ErvalhouS/social-zombie.git social-zombie
 $ cd social-zombie
 $ bin/setup
 ```
-You can confirm your environment is setup by running tests:
+* You can confirm your environment is setup by running tests:
 ```
 $ rake
 ```
-And use Foreman to boot your app server:
+* And use Foreman to boot your app server:
 ```
-$ foreman
+$ foreman start
 ```
+* Refer to [schema.md](https://github.com/ErvalhouS/social-zombie/blob/master/schema.md) for schema of application and use examples
 
-Refer to schema.md for schema of application and use examples
+# WARNING!
+# DON'T FORGET TO ADD ".env" AND ".env.test" ON .gitignore TO AVOID PARAMS LEAKING TO THE SCARY INTERNET
+# EXPORT EACH VALUE AS ENVROIMENT VARIABLE INSTEAD, IS MUCH SAFER!

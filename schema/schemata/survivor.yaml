@@ -1,7 +1,7 @@
 ---
 $schema: http://json-schema.org/draft-04/hyper-schema
 title: Survivor
-description: User of the system, surviving on the zombie-crawled wasteland. When with pending trades to accept or review a 'pending' header will be attached to all requests
+description: User of the system, surviving on the zombie-crawled wasteland. When with pending trades to accept or review a 'pending_trade' HTTP header will be attached to all requests
 stability: prototype
 strictProperties: true
 type:

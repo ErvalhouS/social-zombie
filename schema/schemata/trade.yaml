@@ -1,7 +1,7 @@
 ---
 "$schema": http://json-schema.org/draft-04/hyper-schema
 title: Trade
-description: Represents the transaction of items between survivors
+description: Represents the transaction of items between survivors, while a survivor has a trade that hasn't been marked as :accepted and :reviewed it will receive all logged on requests marked with a 'pending_trade' HTTP header, which contains the trade's information as JSON
 stability: prototype
 strictProperties: true
 type:
@@ -13,6 +13,38 @@ definitions:
     format: uuid
     type:
     - string
+  from_items:
+    description: items from the origin of transaction, represented by 'items' array of JSON Item objects
+    readOnly: true
+    type:
+    - string
+  to:
+    description: survivor recipient of the trade, will be warned of pending trade through pending_trade HTTP header on every logged request, until it is marked as :accepted and :reviewed
+    readOnly: true
+    format: uuid
+    type:
+    - string
+  to_items:
+    description: items added to trade with :from_items :owner, represented by 'items' array of JSON Item objects. It's owner will be warned of pending trade through pending_trade HTTP header on every logged request, until it is marked as :accepted and :reviewed
+    readOnly: true
+    format: uuid
+    type:
+    - string
+    - null
+  accepted:
+    description: boolean to indicate acceptance of trade by :to recipient
+    readOnly: true
+    format: uuid
+    type:
+    - string
+    - null
+  reviewed:
+    description: boolean to indicate review of trade by 'from' recipient and, after value is set to true it's items are exchanged
+    readOnly: true
+    format: uuid
+    type:
+    - string
+    - null
   identity:
     anyOf:
     - "$ref": "/schemata/trade#/definitions/id"
@@ -27,21 +59,20 @@ definitions:
     type:
     - string
 links:
-- description: Create a new trade.
+- description: Create a new trade, at this point, only the attributes :to and :from_items must to be passed. After it's creation both users will receive all responses marked with pending_trade HHTP header, containing the data for this trade, until marked as :accepted and :reviewed.
   href: "/trades"
   method: POST
   rel: create
   schema:
-    properties: {}
+    properties:
+      to:
+        "$ref": "/schemata/trade#/definitions/to"
+      from_items:
+        "$ref": "/definitions/trade/definitions/from_items"
     type:
     - object
     - nil
   title: Create
-- description: Delete an existing trade.
-  href: "/trades/{(%2Fschemata%2Ftrade%23%2Fdefinitions%2Fidentity)}"
-  method: DELETE
-  rel: destroy
-  title: Delete
 - description: Info for existing trade.
   href: "/trades/{(%2Fschemata%2Ftrade%23%2Fdefinitions%2Fidentity)}"
   method: GET
@@ -52,12 +83,27 @@ links:
   method: GET
   rel: instances
   title: List
-- description: Update an existing trade.
+- description: Delete an existing trade, only possible if logged survivor is one the :to or :from_items survivors and if trade isn't accepted and reviewed.
+  href: "/trades/{(%2Fschemata%2Ftrade%23%2Fdefinitions%2Fidentity)}"
+  method: DELETE
+  rel: destroy
+  title: Delete
+- description: Update an existing trade, at this point there are 2 options for trade update: 1 - The :to survivor is replying with :accepted and :to_items 2 - The survivor that owns :from_survivor is replying with :reviewed, so that the trade can be completed
   href: "/trades/{(%2Fschemata%2Ftrade%23%2Fdefinitions%2Fidentity)}"
   method: PATCH
   rel: update
   schema:
-    properties: {}
+    properties:
+      accepted:
+        "$ref": "/schemata/trade#/definitions/accepted"
+      reviewed:
+        "$ref": "/schemata/trade#/definitions/reviewed"
+      to_items:
+        "$ref": "/definitions/trade/definitions/to_items"
+      to:
+        "$ref": "/schemata/trade#/definitions/to"
+      from_items:
+        "$ref": "/definitions/trade/definitions/from_items"
     type:
     - object
     - nil
@@ -67,8 +113,16 @@ properties:
     "$ref": "/schemata/trade#/definitions/created_at"
   id:
     "$ref": "/schemata/trade#/definitions/id"
-  name:
-    "$ref": "/schemata/trade#/definitions/name"
+  accepted:
+    "$ref": "/schemata/trade#/definitions/accepted"
+  reviewed:
+    "$ref": "/schemata/trade#/definitions/reviewed"
+  to_items:
+    "$ref": "/definitions/trade/definitions/to_items"
+  to:
+    "$ref": "/schemata/trade#/definitions/to"
+  from_items:
+    "$ref": "/definitions/trade/definitions/from_items"
   updated_at:
     "$ref": "/schemata/trade#/definitions/updated_at"
 id: schemata/trade
